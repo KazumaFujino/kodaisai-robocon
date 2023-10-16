@@ -33,8 +33,8 @@ namespace servo{
   const int servo_max = 2400; // 最大パルス幅(μs)
   const int PIN_LEFT = 0;
   const int PIN_RIGHT = 1;
-  const int closed_angle = 0;
-  const int open_angle = 90;
+  const int closed_angle = 10;
+  const int open_angle = 100;
 }
 namespace wheel{
   const float straight_gain = 1.0f;
@@ -125,6 +125,7 @@ void loop() {
   // コントローラ入力
   if(!ps5.isConnected()){
     digitalWrite(PIN_EMERGENCY, LOW);
+    digitalWrite(PIN_LED, LOW);
     Serial.printf("コントローラが接続されていません \n");
     return;
   }
@@ -184,7 +185,7 @@ void loop() {
     arm_angle_right = map(arm_angle_right, 0, 180, servo::servo_min, servo::servo_max);  // 角度(0~180)をパルス幅(500~2400μs)に変換
     pwm.writeMicroseconds(servo::PIN_LEFT, arm_angle_left);
     pwm.writeMicroseconds(servo::PIN_RIGHT, arm_angle_right);
-    delay(1000);
+    delay(100);
   }
 
   //足回り
@@ -231,7 +232,7 @@ void loop() {
   CAN.write(data0);
   CAN.write(data1);
   CAN.endPacket();
-  Serial.printf("\n");
+  // Serial.printf("\n");
 
   delay(200);
 }
